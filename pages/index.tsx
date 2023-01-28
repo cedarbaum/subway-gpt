@@ -1,7 +1,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import type { NextPage } from "next";
 import Head from "next/head";
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import { Toaster, toast } from "react-hot-toast";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
@@ -9,7 +9,7 @@ import LoadingDots from "../components/LoadingDots";
 import ResizablePanel from "../components/ResizablePanel";
 import { renderToString } from "react-dom/server";
 import { Switch } from "@headlessui/react";
-import { useQueryState } from 'next-usequerystate'
+import { queryTypes, useQueryState } from "next-usequerystate";
 
 const routes = new Set([
   "1",
@@ -60,13 +60,17 @@ const Home: NextPage = () => {
   const [loading, setLoading] = useState(false);
   const [startingPoint, setStartingPoint] = useQueryState("startingPoint");
   const [destination, setDestination] = useQueryState("destination");
-  const [includCurrentTime, setIncludeCurrentTime] = useQueryState('includeCurrentTime');
+  const [includeCurrentTime, setIncludeCurrentTime] = useState(false);
   const [directions, setDirections] = useState("");
 
   // console.log("Streamed response: ", directions);
 
   const prompt = `Create numbered directions for using the New York City subway to get from '${startingPoint}' to '${destination}'.
-  ${includCurrentTime === "true" ? `The person would like to leave at time 1PM` : ''}
+  ${
+    includeCurrentTime
+      ? `The person would like to leave at time ${new Date().toLocaleString()}`
+      : ""
+  }
 Enclose each subway route letter or number in square brackets.`;
 
   const getDirections = async (e: any) => {
@@ -138,21 +142,26 @@ Enclose each subway route letter or number in square brackets.`;
           <div className="flex justify-between">
             <label>Include current time</label>
             <Switch
-              checked={includCurrentTime === "true"}
-              onChange={(enabled: any) => setIncludeCurrentTime(enabled ? "true" : "false")}
-              className={`${
-                includCurrentTime === "true" ? "bg-blue-600" : "bg-gray-200"
-              } relative inline-flex h-6 w-11 items-center rounded-full`}
+              checked={includeCurrentTime}
+              onChange={setIncludeCurrentTime}
+              as={Fragment}
             >
-              <span className="sr-only">Enable notifications</span>
-              <span
-                className={`${
-                  includCurrentTime === "true" ? "translate-x-6" : "translate-x-1"
-                } inline-block h-4 w-4 transform rounded-full bg-white transition`}
-              />
+              {({ checked }) => (
+                <button
+                  className={`${
+                    checked ? "bg-blue-600" : "bg-gray-200"
+                  } relative inline-flex h-6 w-11 items-center rounded-full`}
+                >
+                  <span className="sr-only">Include current time</span>
+                  <span
+                    className={`${
+                      checked ? "translate-x-6" : "translate-x-1"
+                    } inline-block h-4 w-4 transform rounded-full bg-white transition`}
+                  />
+                </button>
+              )}
             </Switch>
           </div>
-
           {!loading && (
             <button
               className="bg-black rounded-xl text-white font-medium px-4 py-2 sm:mt-10 mt-8 hover:bg-black/80 w-full"
