@@ -21,8 +21,8 @@ const handler = async (req: NextRequest): Promise<Response> => {
   const payload: OpenAIStreamPayload = {
     model: "text-davinci-003",
     prompt,
-    temperature: 0.7,
-    top_p: 1,
+    temperature: 0.0,
+    top_p: 0.3,
     frequency_penalty: 0,
     presence_penalty: 0,
     max_tokens: 200,
