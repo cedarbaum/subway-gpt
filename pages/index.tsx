@@ -1,16 +1,15 @@
 import { AnimatePresence, motion } from "framer-motion";
 import type { NextPage } from "next";
 import Head from "next/head";
-import Image from "next/image";
 import { useState } from "react";
 import { Toaster, toast } from "react-hot-toast";
-import DropDown, { VibeType } from "../components/DropDown";
 import Footer from "../components/Footer";
-import Github from "../components/GitHub";
 import Header from "../components/Header";
 import LoadingDots from "../components/LoadingDots";
 import ResizablePanel from "../components/ResizablePanel";
 import { renderToString } from "react-dom/server";
+import { Switch } from "@headlessui/react";
+import { useQueryState } from 'next-usequerystate'
 
 const routes = new Set([
   "1",
@@ -59,14 +58,15 @@ function processDirectionsText(text: string) {
 
 const Home: NextPage = () => {
   const [loading, setLoading] = useState(false);
-  const [startingPoint, setStartingPoint] = useState("");
-  const [destination, setDestination] = useState("");
+  const [startingPoint, setStartingPoint] = useQueryState("startingPoint");
+  const [destination, setDestination] = useQueryState("destination");
+  const [includCurrentTime, setIncludeCurrentTime] = useQueryState('includeCurrentTime');
   const [directions, setDirections] = useState("");
 
-  console.log("Streamed response: ", directions);
+  // console.log("Streamed response: ", directions);
 
   const prompt = `Create numbered directions for using the New York City subway to get from '${startingPoint}' to '${destination}'.
-
+  ${includCurrentTime === "true" ? `The person would like to leave at time 1PM` : ''}
 Enclose each subway route letter or number in square brackets.`;
 
   const getDirections = async (e: any) => {
@@ -109,40 +109,49 @@ Enclose each subway route letter or number in square brackets.`;
   };
 
   return (
-    <div className="flex max-w-5xl mx-auto flex-col items-center justify-center py-2 min-h-screen">
+    <div className="flex max-w-5xl mx-auto flex-col items-center justify-center py-2 min-h-screen bg-black text-white">
       <Head>
         <title>SubwayGPT</title>
-        <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <Header />
       <main className="flex flex-1 w-full flex-col items-center text-center px-4 mt-4">
         <div className="max-w-xl w-full">
           <div className="flex mt-4 items-center space-x-3">
-            <Image
-              src="/1-black.png"
-              width={30}
-              height={30}
-              alt="1 icon"
-            />
             <p className="text-left font-medium">Enter your starting point</p>
           </div>
           <input
-            value={startingPoint}
+            value={startingPoint ?? ""}
             onChange={(e) => setStartingPoint(e.target.value)}
-            className="w-full rounded-md border-gray-300 shadow-sm focus:border-black focus:ring-black my-5 p-2"
+            className="text-black w-full rounded-md border-gray-300 shadow-sm focus:border-black focus:ring-black my-5 p-2"
             placeholder={"Starting point..."}
           />
-          <div className="flex mb-5 items-center space-x-3">
-            <Image src="/2-black.png" width={30} height={30} alt="1 icon" />
+          <div className="flex items-center space-x-3">
             <p className="text-left font-medium">Enter your destination</p>
           </div>
           <input
-            value={destination}
+            value={destination ?? ""}
             onChange={(e) => setDestination(e.target.value)}
-            className="w-full rounded-md border-gray-300 shadow-sm focus:border-black focus:ring-black my-5 p-2"
+            className="text-black w-full rounded-md border-gray-300 shadow-sm focus:border-black focus:ring-black my-5 p-2"
             placeholder={"Destination..."}
           />
+          <div className="flex justify-between">
+            <label>Include current time</label>
+            <Switch
+              checked={includCurrentTime === "true"}
+              onChange={(enabled: any) => setIncludeCurrentTime(enabled ? "true" : "false")}
+              className={`${
+                includCurrentTime === "true" ? "bg-blue-600" : "bg-gray-200"
+              } relative inline-flex h-6 w-11 items-center rounded-full`}
+            >
+              <span className="sr-only">Enable notifications</span>
+              <span
+                className={`${
+                  includCurrentTime === "true" ? "translate-x-6" : "translate-x-1"
+                } inline-block h-4 w-4 transform rounded-full bg-white transition`}
+              />
+            </Switch>
+          </div>
 
           {!loading && (
             <button
@@ -173,7 +182,7 @@ Enclose each subway route letter or number in square brackets.`;
               {directions && (
                 <div className="space-y-8 flex flex-col items-center justify-center max-w-xl mx-auto">
                   <div
-                    className="bg-white rounded-xl shadow-md p-4 hover:bg-gray-100 transition cursor-copy border"
+                    className="rounded-xl shadow-md p-4 transition cursor-copy border"
                     onClick={() => {
                       navigator.clipboard.writeText(directions);
                       toast("Directions copied to clipboard", {

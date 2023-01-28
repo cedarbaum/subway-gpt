@@ -5,7 +5,6 @@ class MyDocument extends Document {
     return (
       <Html lang="en">
         <Head>
-          <link rel="icon" href="/favicon.ico" />
           <meta
             name="description"
             content="Generate your next Twitter bio in seconds."
@@ -31,7 +30,7 @@ class MyDocument extends Document {
             content="https://twitterbio.com/og-image.png"
           />
         </Head>
-        <body>
+        <body className="bg-black">
           <Main />
           <NextScript />
         </body>
