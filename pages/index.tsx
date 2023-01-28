@@ -43,11 +43,12 @@ function processDirectionsText(text: string) {
     const innerText = match.substring(1, match.length - 1);
     if (routes.has(innerText)) {
       return renderToString(
-        <span className="inline-block align-text-bottom w-5 h-5 m-0">
-          <img
+        <span className="inline-block align-text-bottom w-5 h-5 m-0 relative">
+          <Image
             className="align-bottom"
             src={`/subway-icons/${innerText}.svg`}
             alt={innerText}
+            fill
           />
         </span>
       );
