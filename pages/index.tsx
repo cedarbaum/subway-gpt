@@ -46,7 +46,7 @@ function processDirectionsText(text: string) {
         <span className="inline-block align-text-bottom w-5 h-5 m-0 relative">
           <Image
             className="align-bottom"
-            src={`/subway-icons/${innerText}.svg`}
+            src={`/subway-icons/${innerText.toLowerCase()}.svg`}
             alt={innerText}
             fill
           />
@@ -70,7 +70,7 @@ const Home: NextPage = () => {
 
 Enclose each subway route letter or number in square brackets.`;
 
-  const generateBio = async (e: any) => {
+  const getDirections = async (e: any) => {
     e.preventDefault();
     setDirections("");
     setLoading(true);
@@ -125,7 +125,6 @@ Enclose each subway route letter or number in square brackets.`;
               width={30}
               height={30}
               alt="1 icon"
-              className="mb-5 sm:mb-0"
             />
             <p className="text-left font-medium">Enter your starting point</p>
           </div>
@@ -149,7 +148,7 @@ Enclose each subway route letter or number in square brackets.`;
           {!loading && (
             <button
               className="bg-black rounded-xl text-white font-medium px-4 py-2 sm:mt-10 mt-8 hover:bg-black/80 w-full"
-              onClick={(e) => generateBio(e)}
+              onClick={(e) => getDirections(e)}
             >
               Generate directions &rarr;
             </button>
