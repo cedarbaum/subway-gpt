@@ -65,14 +65,6 @@ const Home: NextPage = () => {
 
   // console.log("Streamed response: ", directions);
 
-  const prompt = `Create numbered directions for using the New York City subway to get from '${startingPoint}' to '${destination}'.
-  ${
-    includeCurrentTime
-      ? `The person would like to leave at time ${new Date().toLocaleString()}`
-      : ""
-  }
-Enclose each subway route letter or number in square brackets.`;
-
   const getDirections = async (e: any) => {
     e.preventDefault();
     setDirections("");
@@ -83,7 +75,11 @@ Enclose each subway route letter or number in square brackets.`;
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        prompt,
+        startingPoint,
+        destination,
+        ...(includeCurrentTime && {
+          time: new Date().toLocaleString(),
+        }),
       }),
     });
     console.log("Edge function returned.");

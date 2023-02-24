@@ -10,12 +10,30 @@ export const config = {
 };
 
 const handler = async (req: NextRequest): Promise<Response> => {
-  const { prompt } = (await req.json()) as {
-    prompt?: string;
+  const { startingPoint, destination, time } = (await req.json()) as {
+    startingPoint?: string;
+    destination?: string;
+    time?: string;
   };
 
-  if (!prompt) {
-    return new Response("No prompt in the request", { status: 400 });
+  if (!startingPoint || !destination) {
+    return new Response("No startingPoint or destination in the request", {
+      status: 400,
+    });
+  }
+
+  const prompt = `You are expert at navigating the New York City subway system. Your job is to give users directions from one location to another using only the New York City subway and buses.
+
+The user is currently at ${startingPoint} and wants to go to ${destination}.
+
+They will leave ${time ? "now" : "approximately at time " + time}.
+
+Create numbered directions for them.
+
+Enclose each subway route letter or number in square brackets.`;
+
+  if (process.env.ECHO_PROMPT) {
+    console.log(prompt);
   }
 
   const payload: OpenAIStreamPayload = {
