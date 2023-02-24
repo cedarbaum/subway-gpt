@@ -1,7 +1,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import type { NextPage } from "next";
 import Head from "next/head";
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { Toaster, toast } from "react-hot-toast";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
@@ -9,7 +9,8 @@ import LoadingDots from "../components/LoadingDots";
 import ResizablePanel from "../components/ResizablePanel";
 import { renderToString } from "react-dom/server";
 import { Switch } from "@headlessui/react";
-import { queryTypes, useQueryState } from "next-usequerystate";
+import { useQueryState } from "next-usequerystate";
+import Banner from "../components/Banner";
 
 const routes = new Set([
   "1",
@@ -62,6 +63,15 @@ const Home: NextPage = () => {
   const [destination, setDestination] = useQueryState("destination");
   const [includeCurrentTime, setIncludeCurrentTime] = useState(false);
   const [directions, setDirections] = useState("");
+  const [bannerVisible, setBannerVisible] = useState(false);
+
+  useEffect(() => {
+    if (localStorage?.getItem("warning-dismissed") !== null) {
+      setBannerVisible(false);
+    } else {
+      setBannerVisible(true);
+    }
+  }, []);
 
   // console.log("Streamed response: ", directions);
 
@@ -82,7 +92,8 @@ const Home: NextPage = () => {
         }),
       }),
     });
-    console.log("Edge function returned.");
+
+    // console.log("Edge function returned.");
 
     if (!response.ok) {
       throw new Error(response.statusText);
@@ -113,8 +124,28 @@ const Home: NextPage = () => {
       <Head>
         <title>SubwayGPT</title>
       </Head>
-
       <Header />
+      {bannerVisible && (
+        <Banner
+          title="Warning"
+          description=<>
+            This is just for fun/learning and should not be considered accurate!
+            Some more info can be found{" "}
+            <a
+              className="underline font-bold"
+              href="https://github.com/cedarbaum/subway-gpt/blob/main/README.md#this-doesnt-work-all-that-well"
+              target="_"
+            >
+              here
+            </a>
+            .
+          </>
+          onClose={() => {
+            localStorage?.setItem("warning-dismissed", "true");
+            setBannerVisible(false);
+          }}
+        />
+      )}
       <main className="flex flex-1 w-full flex-col items-center text-center px-4 mt-4">
         <div className="max-w-xl w-full">
           <div className="flex mt-4 items-center space-x-3">
