@@ -15,6 +15,8 @@ While GPT-3 can occasionally give very accurate/natural subway directions, the m
 - https://towardsdatascience.com/gpt-3-navigates-the-new-york-subway-f28ea49fcead
 - https://www.youtube.com/watch?v=Xzb1Vc8dYAY (presentation of above)
 
+It should be noted, however, that OpenAI's ChatGPT does, in my experience, give better directions then the standalone GPT-3 model. I would encourage you to try it out: https://chat.openai.com/chat
+
 Further, the prompt generation and model parameters can likely be improved upon.
 
 Finally, this app does not currently take into account service alerts. These could be incorporated into the prompt generation relatively easily. A more conversational approach (e.g., ChatGPT) could also be used here to allow alternative routes on the fly:
