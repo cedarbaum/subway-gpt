@@ -153,7 +153,9 @@ const Home: NextPage = () => {
           </div>
           <input
             value={startingPoint ?? ""}
-            onChange={(e) => setStartingPoint(e.target.value)}
+            onChange={(e) =>
+              setStartingPoint(e.target.value, { scroll: false })
+            }
             className="text-black w-full rounded-md border-gray-300 shadow-sm focus:border-black focus:ring-black my-5 p-2"
             placeholder={"Starting point..."}
           />
@@ -162,7 +164,7 @@ const Home: NextPage = () => {
           </div>
           <input
             value={destination ?? ""}
-            onChange={(e) => setDestination(e.target.value)}
+            onChange={(e) => setDestination(e.target.value, { scroll: false })}
             className="text-black w-full rounded-md border-gray-300 shadow-sm focus:border-black focus:ring-black my-5 p-2"
             placeholder={"Destination..."}
           />
