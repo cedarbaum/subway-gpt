@@ -10,12 +10,12 @@ This project uses the [OpenAI GPT-3 API](https://openai.com/api/) (specifically,
 
 ## This doesn't work all that well...
 
-While GPT-3 can occasionally give very accurate/natural subway directions, the model still has difficulty with spatial/navigational problems. I am not an AI expert, but others have written and experimented with this previously:
+While GPT-3 can occasionally give very accurate/natural subway directions, the model still appears to have difficulty with spatial/navigational problems. I am not an AI expert, but others have experimented and written about this previously:
 
 - https://towardsdatascience.com/gpt-3-navigates-the-new-york-subway-f28ea49fcead
-- https://www.youtube.com/watch?v=Xzb1Vc8dYAY (same author as above)
+- https://www.youtube.com/watch?v=Xzb1Vc8dYAY (presentation of above)
 
-Further, the prompt generation and model parameters can likely be improved upon. This likely isn't trivial and is itself an interesting optimization problem.
+Further, the prompt generation and model parameters can likely be improved upon.
 
 Finally, this app does not currently take into account service alerts. These could be incorporated into the prompt generation relatively easily. A more conversational approach (e.g., ChatGPT) could also be used here to allow alternative routes on the fly:
 
