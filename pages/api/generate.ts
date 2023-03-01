@@ -39,10 +39,7 @@ Enclose each subway route letter or number in square brackets.`;
   const payload: OpenAIStreamPayload = {
     model: "text-davinci-003",
     prompt,
-    temperature: 0.3,
-    top_p: 0.3,
-    frequency_penalty: 0,
-    presence_penalty: 0,
+    temperature: 0.5,
     max_tokens: 200,
     stream: true,
     n: 1,
