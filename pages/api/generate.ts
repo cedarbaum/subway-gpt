@@ -1,5 +1,9 @@
 import type { NextRequest } from "next/server";
-import { OpenAIStream, OpenAIStreamPayload } from "../../utils/OpenAIStream";
+import {
+  OpenAIStream,
+  OpenAIStreamPayload,
+  Message,
+} from "../../utils/OpenAIStream";
 
 if (!process.env.OPENAI_API_KEY) {
   throw new Error("Missing env var from OpenAI");
@@ -22,26 +26,29 @@ const handler = async (req: NextRequest): Promise<Response> => {
     });
   }
 
-  const prompt = `You are expert at navigating the New York City subway system. Your job is to give users directions from one location to another using only the New York City subway and buses.
+  const systemMessage: Message = {
+    role: "system",
+    content: `You are expert at navigating the New York City subway system. Your job is to give users directions from one location to another using the New York City subway.`,
+  };
 
-The user is currently at ${startingPoint} and wants to go to ${destination}.
+  const userMessage: Message = {
+    role: "user",
+    content: `Find directions from ${startingPoint} to ${destination}.
 
-They will leave ${time ? "now" : "approximately at time " + time}.
+I will leave ${!time ? "now" : "approximately at time " + time}.
 
-Create numbered directions for them.
-
-Enclose each subway route letter or number in square brackets.`;
+Create numbered directions and enclose each subway route letter or number in square brackets.`,
+  };
 
   if (process.env.ECHO_PROMPT) {
-    console.log(prompt);
+    console.log(userMessage.content);
   }
 
   const payload: OpenAIStreamPayload = {
-    model: "text-davinci-003",
-    prompt,
-    temperature: 0.5,
-    max_tokens: 200,
+    model: "gpt-3.5-turbo",
+    messages: [systemMessage, userMessage],
     stream: true,
+    max_tokens: 200,
     n: 1,
   };
 
