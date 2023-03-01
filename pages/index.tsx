@@ -41,16 +41,21 @@ const routes = new Set([
 function processDirectionsText(text: string) {
   return text.replaceAll(/\[.*?\]/g, (match: string) => {
     const innerText = match.substring(1, match.length - 1);
-    if (routes.has(innerText)) {
-      return renderToString(
-        <span className="inline-block align-text-bottom w-5 h-5 m-0 relative">
-          <img
-            className="align-bottom"
-            src={`/subway-icons/${innerText.toLowerCase()}.svg`}
-            alt={innerText}
-          />
-        </span>
-      );
+    const linesInBrackets = innerText.replaceAll(" ", "").split(",");
+    if (linesInBrackets.every((r) => routes.has(r))) {
+      return linesInBrackets
+        .map((r) =>
+          renderToString(
+            <span className="inline-block align-text-bottom w-5 h-5 m-0 relative">
+              <img
+                className="align-bottom"
+                src={`/subway-icons/${r.toLowerCase()}.svg`}
+                alt={r}
+              />
+            </span>
+          )
+        )
+        .join();
     }
 
     return match;
