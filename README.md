@@ -1,5 +1,7 @@
 # [SubwayGPT](https://www.subwaygpt.app/)
 
+## This project has been deprecated and now redirect to the chat feature of [closingdoors.nyc](https://closingdoors.nyc/chat)
+
 This project generates NYC subway directions using AI.
 
 It is largely based on [TwitterBio.com](https://github.com/Nutlope/twitterbio).
